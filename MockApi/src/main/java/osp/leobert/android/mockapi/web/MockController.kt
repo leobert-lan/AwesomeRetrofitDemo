@@ -13,11 +13,11 @@ import osp.leobert.android.mockapi.dto.ValueResp
  * Created by leobert on 2020/8/28.
  */
 @RestController
-@RequestMapping(value = ["/mock"])
+@RequestMapping(value = "/mock")
 class MockController {
     val logger: Logger = Logger.getLogger(MockController::class.java)
 
-    @RequestMapping(value = ["/helloworld"], method = [RequestMethod.GET])
+    @RequestMapping(value = "/helloworld", method = arrayOf(RequestMethod.GET))
     fun helloworld(): Resp {
         return ValueResp.newVSuccess("hello world")
     }
