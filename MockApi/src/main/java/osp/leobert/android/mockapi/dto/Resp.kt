@@ -12,7 +12,7 @@ open class Resp(val code: Int, val msg: String?) {
 
         fun newSuccess(msg: String?): Resp = Resp(0, msg)
 
-        fun newFailure(code: Int, msg: String?): Resp? = Resp(code, msg)
+        fun newFailure(code: Int, msg: String?): Resp = Resp(code, msg)
     }
 }
 
