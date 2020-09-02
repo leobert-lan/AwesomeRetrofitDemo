@@ -13,7 +13,12 @@ Some intresting demos of retrofit and okhttp, for [blog](https://juejin.im/post/
 
 ## 内容说明
 
-Demo: Android 项目，不多做解释了
+Demo: Android 项目，不多做解释了，运行前务必修改：
+
+```
+osp.leobert.android.retrofitsample.net.api.AppApi#BASE_URL
+```
+手机和跑服务的电脑处于同一局域网，改成电脑的ip；如果是模拟器不能使用localhost，印象中0.0.0.1是可以的，最好还是用ip。
 
 MockApi：一个用于模拟的接口项目，需要maven，基于SpringBoot，
 
