@@ -18,6 +18,8 @@ class NetLoggingEventListener private constructor(request: Request) : EventListe
 
 
     class RetrofitRequest(val timeMillis: Long) {
+        var logInfo: StringBuilder? = null
+
         override fun toString(): String {
             return "RetrofitRequest(timeMillis=$timeMillis)"
         }
@@ -32,27 +34,29 @@ class NetLoggingEventListener private constructor(request: Request) : EventListe
 
 
     private val logBuilder: StringBuilder = StringBuilder()
-            .append("Request{method=")
-            .append(request.method)
-            .append(", url=")
-            .append(request.url)
-            .append(", tags=")
-            .append(request.tag(Invocation::class.java).tagString()).append('}')
-            .append(RETURN)
-            .apply {
-                //其实这个时间差衡量没有什么意义，无论是同步处理的call还是放到线程池处理的异步call，都会立即调用到callStart
-                //我们这里计算出来的时间差，只能代表Retrofit和OKhttp内部对call进行了一堆处理所耗费的事件
-                val tag = request.tag(RetrofitRequest::class.java)
-                append("retrofit request at: ${tag?.timeMillis}")
-                if (tag != null)
-                    append("; waited [${System.currentTimeMillis() - tag.timeMillis} MS]")
+        .append("Request{method=")
+        .append(request.method)
+        .append(", url=")
+        .append(request.url)
+        .append(", tags=")
+        .append(request.tag(Invocation::class.java).tagString()).append('}')
+        .append(RETURN)
+        .apply {
+            //其实这个时间差衡量没有什么意义，无论是同步处理的call还是放到线程池处理的异步call，都会立即调用到callStart
+            //我们这里计算出来的时间差，只能代表Retrofit和OKhttp内部对call进行了一堆处理所耗费的事件
+            val tag = request.tag(RetrofitRequest::class.java)
+            append("retrofit request at: ${tag?.timeMillis}")
+            if (tag != null)
+                append("; waited [${System.currentTimeMillis() - tag.timeMillis} MS]")
 
-                append(RETURN)
-            }
-            .append("listener created at ${System.currentTimeMillis()}").append(RETURN)
+            append(RETURN)
+        }
+        .append("listener created at ${System.currentTimeMillis()}").append(RETURN)
 
 
     override fun callStart(call: Call) {
+        call.request().tag(NetLoggingEventListener.RetrofitRequest::class.java)?.logInfo = logBuilder
+
         startNs = System.nanoTime()
 
         logWithTime(call, "callStart", false)
@@ -87,20 +91,20 @@ class NetLoggingEventListener private constructor(request: Request) : EventListe
     }
 
     override fun connectEnd(
-            call: Call,
-            inetSocketAddress: InetSocketAddress,
-            proxy: Proxy,
-            protocol: Protocol?
+        call: Call,
+        inetSocketAddress: InetSocketAddress,
+        proxy: Proxy,
+        protocol: Protocol?
     ) {
         logWithTime(call, "connectEnd: $protocol", false)
     }
 
     override fun connectFailed(
-            call: Call,
-            inetSocketAddress: InetSocketAddress,
-            proxy: Proxy,
-            protocol: Protocol?,
-            ioe: IOException
+        call: Call,
+        inetSocketAddress: InetSocketAddress,
+        proxy: Proxy,
+        protocol: Protocol?,
+        ioe: IOException
     ) {
         logWithTime(call, "connectFailed: $protocol $ioe", false)
     }
@@ -181,6 +185,8 @@ private fun Invocation?.tagString(): String {
     return if (this == null)
         "null"
     else
-        String.format("%s.%s() ignore param",
-                this.method().declaringClass.name, this.method().name)
+        String.format(
+            "%s.%s() ignore param",
+            this.method().declaringClass.name, this.method().name
+        )
 }

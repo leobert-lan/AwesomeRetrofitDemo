@@ -6,7 +6,7 @@ package osp.leobert.android.retrofitsample.net.interceptors;
  * Created by leobert on 2020-03-09.
  */
 public interface Consts {
-    String OVERRIDE_CONNECT_TIMEOUT = "motor-oct";
-    String OVERRIDE_WRITE_TIMEOUT = "motor-owt";
-    String OVERRIDE_READ_TIMEOUT = "motor-ort";
+    String OVERRIDE_CONNECT_TIMEOUT = "demo-oct";
+    String OVERRIDE_WRITE_TIMEOUT = "demo-owt";
+    String OVERRIDE_READ_TIMEOUT = "demo-ort";
 }

@@ -23,22 +23,24 @@
         android:id="@+id/case2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:text="时长统计工具" />
 
     <Button
         android:id="@+id/case3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:text="全局支持人机校验" />
 
     <TextView
         android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
-        android:background="#f5f5f5" />
+        android:layout_marginTop="15dp"
+        android:background="#f5f5f5"
+        android:padding="5dp"
+        android:scrollbars="vertical" />
 
 
 </LinearLayout>
